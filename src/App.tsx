@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import './App.css'
 
+// Rules:
+
+// 1. Underpopulation: Any live cell with fewer than two live neighbors dies, as if by underpopulation.
+// 2. Survival: Any live cell with two or three live neighbors lives on to the next generation.
+// 3. Overpopulation: Any live cell with more than three live neighbors dies, as if by overpopulation.
+// 4. Reproduction: Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+
 // Constants
 const numRows = 50
 const numCols = 95
 const cellSize = 13
 const colors = {
-  grid: '#212124',
-  cell: '#f4f4f4',
-  background: '#161617',
+  grid: '#212124', // Color for the grid lines
+  cell: '#f4f4f4', // Color for live cells (white)
+  background: '#161617', // Color for dead cells (dark gray)
 }
 
 // Possible neighbor positions (up, down, left, right, and diagonals)
@@ -65,13 +72,13 @@ const App: React.FC = () => {
 
           // Apply the Game of Life rules
           if (neighbors < 2 || neighbors > 3) {
-            // Any live cell with fewer than two or more than three live neighbors dies
+            // Rule 1 & 3: Any live cell with fewer than two or more than three live neighbors dies
             return 0
           } else if (g[i][k] === 0 && neighbors === 3) {
-            // Any dead cell with exactly three live neighbors becomes a live cell
+            // Rule 4: Any dead cell with exactly three live neighbors becomes a live cell
             return 1
           } else {
-            // Otherwise, the cell remains in its current state
+            // Rule 2: Any live cell with two or three live neighbors lives on
             return g[i][k]
           }
         }),
