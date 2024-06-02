@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import './App.css'
 
 // Constants
@@ -37,10 +37,12 @@ const App: React.FC = () => {
   const [grid, setGrid] = useState<number[][]>(() => generateEmptyGrid())
   // State to track whether the simulation is running
   const [running, setRunning] = useState<boolean>(false)
+  const runningRef = useRef(running)
+  runningRef.current = running
 
   // Function to run the simulation
   const runSimulation = useCallback(() => {
-    if (!running) {
+    if (!runningRef.current) {
       return
     }
 
@@ -70,15 +72,18 @@ const App: React.FC = () => {
     })
 
     // Schedule the next simulation step
-    setTimeout(runSimulation, 100)
-  }, [running])
+    requestAnimationFrame(runSimulation)
+  }, [])
 
   // Effect to start the simulation when 'running' state changes
   useEffect(() => {
     if (running) {
+      runningRef.current = true
       runSimulation()
+    } else {
+      runningRef.current = false
     }
-  }, [runSimulation, running])
+  }, [running, runSimulation])
 
   return (
     <div
