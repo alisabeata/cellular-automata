@@ -6,9 +6,9 @@ const numRows = 50
 const numCols = 95
 const cellSize = 13
 const colors = {
-  grid: '#222429',
+  grid: '#212124',
   cell: '#f4f4f4',
-  background: '#24272d',
+  background: '#161617',
 }
 
 // Possible neighbor positions (up, down, left, right, and diagonals)
@@ -51,9 +51,13 @@ const App: React.FC = () => {
       return g.map((row, i) =>
         row.map((col, k) => {
           let neighbors = 0
+
+          // Calculate the number of live neighbors
           operations.forEach(([x, y]) => {
             const newI = i + x
             const newK = k + y
+
+            // Check if the neighboring cell is within bounds
             if (newI >= 0 && newI < numRows && newK >= 0 && newK < numCols) {
               neighbors += g[newI][newK]
             }
@@ -61,10 +65,13 @@ const App: React.FC = () => {
 
           // Apply the Game of Life rules
           if (neighbors < 2 || neighbors > 3) {
+            // Any live cell with fewer than two or more than three live neighbors dies
             return 0
           } else if (g[i][k] === 0 && neighbors === 3) {
+            // Any dead cell with exactly three live neighbors becomes a live cell
             return 1
           } else {
+            // Otherwise, the cell remains in its current state
             return g[i][k]
           }
         }),
